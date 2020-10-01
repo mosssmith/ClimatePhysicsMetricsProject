@@ -8,6 +8,9 @@ VECTOR_METRIC = pd.read_csv('CH4eMetricEmissions/CH4FEVectorMetric/CH4FEVectorMe
 
 METRIC_CONSTANTS = pd.DataFrame({
     'GWP100': [28],
+    'GWP20': [84],
+    'GTP100': [4],
+    'GTP100': [67],
     'H': [100],
     'CGWP100': [4300],
     'CGTP75': [3700],
@@ -64,13 +67,22 @@ def addMetricEmissions(llcp_emissions_series):
 
 
 def addGWPEmsColumn(llcp_emissions_series):
-    llcp_emissions_series["GWP"] = np.zeros(len(llcp_emissions_series.index)).tolist()
+    llcp_emissions_series["GWP100"] = np.zeros(len(llcp_emissions_series.index)).tolist()
+    llcp_emissions_series["GWP20"] = np.zeros(len(llcp_emissions_series.index)).tolist()
+    llcp_emissions_series["GTP100"] = np.zeros(len(llcp_emissions_series.index)).tolist()
+    llcp_emissions_series["GTP20"] = np.zeros(len(llcp_emissions_series.index)).tolist()
 
     GWP100 = METRIC_CONSTANTS['GWP100'][0]
+    GWP20 = METRIC_CONSTANTS['GWP20'][0]
+    GTP100 = METRIC_CONSTANTS['GTP100'][0]
+    GTP20 = METRIC_CONSTANTS['GTP20'][0]
 
     for i in llcp_emissions_series.index:
         Et = llcp_emissions_series["LLCP Emissions"].loc[i]
-        llcp_emissions_series["GWP"].loc[i] = Et / GWP100
+        llcp_emissions_series["GWP100"].loc[i] = Et / GWP100
+        llcp_emissions_series["GWP20"].loc[i] = Et / GWP20
+        llcp_emissions_series["GTP100"].loc[i] = Et / GTP100
+        llcp_emissions_series["GTP20"].loc[i] = Et / GTP20
 
     return llcp_emissions_series
 

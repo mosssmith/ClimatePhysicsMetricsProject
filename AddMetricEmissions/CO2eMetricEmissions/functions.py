@@ -8,16 +8,19 @@ VECTOR_METRIC = pd.read_csv('CO2eMetricEmissions/CO2FEVectorMetric/CO2FEVectorMe
 
 METRIC_CONSTANTS = pd.DataFrame({
     'GWP100': [28],
+    'GWP20': [84],
+    'GTP100': [4],
+    'GTP100': [67],
     'H': [100],
     'CGWP100': [4300],
     'CGTP75': [3700],
     'r': [0.75],
     's': [0.25],
     'dt': [20],
-    'REch4':[0.000599],       #W/m2ppb AR5 Chapt.8 Appendix 8.A. 1.65 * 0.000363
-    'REco2':[0.0000137],      #W/m2ppb AR5 Chapt.8 Appendix 8.A.
-    'Convch4':[0.351828],  #ppb/MtCH4 GIR
-    'Convco2':[0.1282496]   #ppb/MtCO2 [0.46895] #ppb/MtC GIR - where does this come from?
+    'REch4': [0.000599],       #W/m2ppb AR5 Chapt.8 Appendix 8.A. 1.65 * 0.000363
+    'REco2': [0.0000137],      #W/m2ppb AR5 Chapt.8 Appendix 8.A.
+    'Convch4': [0.351828],  #ppb/MtCH4 GIR
+    'Convco2': [0.1282496]   #ppb/MtCO2 [0.46895] #ppb/MtC GIR - where does this come from?
 })
 
 
@@ -67,13 +70,22 @@ def addMetricEmissions(slcp_emissions_series):
 
 
 def addGWPEmsColumn(slcp_emissions_series):
-    slcp_emissions_series["GWP"] = np.zeros(len(slcp_emissions_series.index)).tolist()
+    slcp_emissions_series["GWP100"] = np.zeros(len(slcp_emissions_series.index)).tolist()
+    slcp_emissions_series["GWP20"] = np.zeros(len(slcp_emissions_series.index)).tolist()
+    slcp_emissions_series["GTP100"] = np.zeros(len(slcp_emissions_series.index)).tolist()
+    slcp_emissions_series["GTP20"] = np.zeros(len(slcp_emissions_series.index)).tolist()
 
     GWP100 = METRIC_CONSTANTS['GWP100'][0]
+    GWP20 = METRIC_CONSTANTS['GWP20'][0]
+    GTP100 = METRIC_CONSTANTS['GTP100'][0]
+    GTP20 = METRIC_CONSTANTS['GTP20'][0]
 
     for i in slcp_emissions_series.index:
-        Et = slcp_emissions_series["SLCP Emissions"].loc[i]
-        slcp_emissions_series["GWP"].loc[i] = GWP100 * Et
+        Et = slcp_emissions_series["LLCP Emissions"].loc[i]
+        slcp_emissions_series["GWP100"].loc[i] = Et * GWP100
+        slcp_emissions_series["GWP20"].loc[i] = Et * GWP20
+        slcp_emissions_series["GTP100"].loc[i] = Et * GTP100
+        slcp_emissions_series["GTP20"].loc[i] = Et * GTP20
 
     return slcp_emissions_series
 
