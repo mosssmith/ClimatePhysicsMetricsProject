@@ -10,7 +10,7 @@ METRIC_CONSTANTS = pd.DataFrame({
     'GWP100': [28],
     'GWP20': [84],
     'GTP100': [4],
-    'GTP100': [67],
+    'GTP20': [67],
     'H': [100],
     'CGWP100': [4300],
     'CGTP75': [3700],

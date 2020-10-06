@@ -10,7 +10,7 @@ METRIC_CONSTANTS = pd.DataFrame({
     'GWP100': [28],
     'GWP20': [84],
     'GTP100': [4],
-    'GTP100': [67],
+    'GTP20': [67],
     'H': [100],
     'CGWP100': [4300],
     'CGTP75': [3700],
@@ -78,7 +78,7 @@ def addGWPEmsColumn(llcp_emissions_series):
     GTP20 = METRIC_CONSTANTS['GTP20'][0]
 
     for i in llcp_emissions_series.index:
-        Et = llcp_emissions_series["LLCP Emissions"].loc[i]
+        Et = llcp_emissions_series["SLCP Emissions"].loc[i]
         llcp_emissions_series["GWP100"].loc[i] = Et / GWP100
         llcp_emissions_series["GWP20"].loc[i] = Et / GWP20
         llcp_emissions_series["GTP100"].loc[i] = Et / GTP100
