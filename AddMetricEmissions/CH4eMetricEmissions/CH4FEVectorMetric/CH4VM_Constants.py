@@ -19,7 +19,7 @@ CARBON_LIFETIMES = np.array([1000000, 394.4, 36.54, 4.304])
 
 # METHANE
 METHANE_BOXES = np.array([1, 0, 0, 0])
-METHANE_LIFETIMES = np.array([9.15, 1, 1, 1])
+METHANE_LIFETIMES = np.array([12.4, 1, 1, 1])
 
 DECAY_CONSTANTS = pd.DataFrame(
     data={'CarbonBoxes': CARBON_BOXES,
