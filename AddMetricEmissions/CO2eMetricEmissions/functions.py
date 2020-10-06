@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 
 # Add VectorMetric into the functions directly
-VECTOR_METRIC = pd.read_csv('CO2eMetricEmissions/CO2FEVectorMetric/CO2FEVectorMetricFactors.csv')
+VECTOR_METRIC = pd.read_csv('AddMetricEmissions/CO2eMetricEmissions/CO2FEVectorMetric/CO2FEVectorMetricFactors.csv')
 
 METRIC_CONSTANTS = pd.DataFrame({
     'GWP100': [28],
