@@ -78,7 +78,7 @@ def addGWPEmsColumn(llcp_emissions_series):
     GTP20 = METRIC_CONSTANTS['GTP20'][0]
 
     for i in llcp_emissions_series.index:
-        Et = llcp_emissions_series["SLCP Emissions"].loc[i]
+        Et = llcp_emissions_series["LLCP Emissions"].loc[i]
         llcp_emissions_series["GWP100"].loc[i] = Et / GWP100
         llcp_emissions_series["GWP20"].loc[i] = Et / GWP20
         llcp_emissions_series["GTP100"].loc[i] = Et / GTP100
@@ -174,7 +174,7 @@ def addBValueColumn(vector_metric, llcp_emissions_series):
 
 # Generate B value
 def generateBValue(vector_metric, llcp_emissions_series, year_specified):
-    #   slcpEmissionsSeries takes the form of a dataframe with columns "Year" and "SLCP Emissions"
+    #   llcpEmissionsSeries takes the form of a dataframe with columns "Year" and "LLCP Emissions"
 
     #   Create a "NormalisedYear" column
     llcp_emissions_series["NormalisedYear"] = year_specified - llcp_emissions_series["Year"]
