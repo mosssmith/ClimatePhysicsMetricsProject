@@ -81,7 +81,7 @@ def addGWPEmsColumn(slcp_emissions_series):
     GTP20 = METRIC_CONSTANTS['GTP20'][0]
 
     for i in slcp_emissions_series.index:
-        Et = slcp_emissions_series["LLCP Emissions"].loc[i]
+        Et = slcp_emissions_series["SLCP Emissions"].loc[i]
         slcp_emissions_series["GWP100"].loc[i] = Et * GWP100
         slcp_emissions_series["GWP20"].loc[i] = Et * GWP20
         slcp_emissions_series["GTP100"].loc[i] = Et * GTP100
