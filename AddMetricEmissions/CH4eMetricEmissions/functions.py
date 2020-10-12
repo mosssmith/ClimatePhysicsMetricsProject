@@ -2,9 +2,10 @@ import mpmath as mp
 mp.dps = 15; mp.pretty = True
 import pandas as pd
 import numpy as np
+from pathlib import Path
 
 # Add VectorMetric into the functions directly
-VECTOR_METRIC = pd.read_csv('AddMetricEmissions/CH4eMetricEmissions/CH4FEVectorMetric/CH4FEVectorMetricFactors.csv')
+VECTOR_METRIC = pd.read_csv(Path(__file__).parent / './CH4FEVectorMetric/CH4FEVectorMetricFactors.csv')
 
 METRIC_CONSTANTS = pd.DataFrame({
     'GWP100': [28],
