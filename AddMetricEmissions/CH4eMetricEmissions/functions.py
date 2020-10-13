@@ -34,7 +34,7 @@ def addCH4eMetricEmissions(gir_emissions_series, methods):
         scen_names = []
         gases_in = ['CO2', 'CH4', 'N2O']
 
-        #       MAKE DATAFRAME LARGE ENOUGH TO HOLD METRIC EMISSIONS SCENARIOS
+        # MAKE DATAFRAME LARGE ENOUGH TO HOLD METRIC EMISSIONS SCENARIOS
         for method in methods:
             # Add new scenario for each method with new scenarios named "Scenario" + " - " + "Method"
             ColumnName = scenario + " - " + method

@@ -28,13 +28,13 @@ METRIC_CONSTANTS = pd.DataFrame({
 def addCO2eMetricEmissions(gir_emissions_series, methods):
     Scenarios = gir_emissions_series.columns.levels[0]
 
-    GIREmissionsSeriesOutput = gir_emissions_series.copy()
+    gir_emissions_series_output = gir_emissions_series.copy()
 
     for scenario in Scenarios:
         scen_names = []
         gases_in = ['CO2', 'CH4', 'N2O']
 
-        #       MAKE DATAFRAME LARGE ENOUGH TO HOLD METRIC EMISSIONS SCENARIOS
+        # MAKE DATAFRAME LARGE ENOUGH TO HOLD METRIC EMISSIONS SCENARIOS
         for method in methods:
             # Add new scenario for each method with new scenarios named "Scenario" + " - " + "Method"
             ColumnName = scenario + " - " + method
@@ -43,18 +43,33 @@ def addCO2eMetricEmissions(gir_emissions_series, methods):
         # Make a correctly sized, shaped, and labelled dataframe to add to the emissions series.
         dfToAdd = pd.DataFrame(np.zeros((len(gir_emissions_series.index), len(gases_in) * len(methods))),
                                columns=pd.MultiIndex.from_product([scen_names, gases_in]),
-                               index=GIREmissionsSeriesOutput.index)
-        GIREmissionsSeriesOutput = GIREmissionsSeriesOutput.join(dfToAdd)
+                               index=gir_emissions_series_output.index)
+        gir_emissions_series_output = gir_emissions_series_output.join(dfToAdd)
 
-        #       MAKE SLCPEmissions DATAFRAME USING ORIGINAL SCENARIO EMISSIONS
+        # MAKE SLCPEmissions DATAFRAME USING ORIGINAL SCENARIO EMISSIONS
         SLCPTimeSeries = pd.DataFrame(data={'Year': gir_emissions_series[scenario, 'CH4'].index,
                                             'SLCP Emissions': gir_emissions_series[scenario, 'CH4'].to_list()})
-        SLCPMetricTimeSeries = addMetricEmissions(SLCPTimeSeries)
+        slcp_metric_time_series = addMetricEmissions(SLCPTimeSeries)
         for method in methods:
             ColumnName = scenario + " - " + method
-            GIREmissionsSeriesOutput[ColumnName, 'CO2'] = SLCPMetricTimeSeries[['Year', method]].set_index('Year')
+            # Add CO2 equivalent emissions for CH4
+            gir_emissions_series_output[ColumnName, 'CO2'] = slcp_metric_time_series[['Year', method]].set_index('Year')
 
-    return GIREmissionsSeriesOutput
+            # Add CO2 equivalent emissions for CO2
+            gir_emissions_series_output[ColumnName, 'CO2'] += gir_emissions_series[scenario, 'CO2']
+
+            # # Add CO2 equivalent emissions for N20
+            if method is 'GWP20':
+                CO2eValueN20 = METRIC_CONSTANTS['GWP20'][0]
+            elif method is 'GTP100':
+                CO2eValueN20 = METRIC_CONSTANTS['GTP100'][0]
+            elif method is 'GTP20':
+                CO2eValueN20 = METRIC_CONSTANTS['GTP20'][0]
+            else:
+                CO2eValueN20 = METRIC_CONSTANTS['GWP100'][0]
+            gir_emissions_series_output[ColumnName, 'CO2'] += CO2eValueN20*gir_emissions_series[scenario, 'N2O']
+
+    return gir_emissions_series_output
 
 
 def addMetricEmissions(slcp_emissions_series):
