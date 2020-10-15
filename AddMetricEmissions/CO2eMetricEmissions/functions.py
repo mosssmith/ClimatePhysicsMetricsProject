@@ -32,7 +32,7 @@ def addCO2eMetricEmissions(gir_emissions_series, methods):
 
     for scenario in Scenarios:
         scen_names = []
-        gases_in = ['CO2', 'CH4', 'N2O']
+        gases_in = ['CO2']
 
         # MAKE DATAFRAME LARGE ENOUGH TO HOLD METRIC EMISSIONS SCENARIOS
         for method in methods:
@@ -47,27 +47,32 @@ def addCO2eMetricEmissions(gir_emissions_series, methods):
         gir_emissions_series_output = gir_emissions_series_output.join(dfToAdd)
 
         # MAKE SLCPEmissions DATAFRAME USING ORIGINAL SCENARIO EMISSIONS
-        SLCPTimeSeries = pd.DataFrame(data={'Year': gir_emissions_series[scenario, 'CH4'].index,
-                                            'SLCP Emissions': gir_emissions_series[scenario, 'CH4'].to_list()})
-        slcp_metric_time_series = addMetricEmissions(SLCPTimeSeries)
+        if 'CH4' in gir_emissions_series.columns.levels[1]:
+            SLCPTimeSeries = pd.DataFrame(data={'Year': gir_emissions_series[scenario, 'CH4'].index,
+                                                'SLCP Emissions': gir_emissions_series[scenario, 'CH4'].to_list()})
+            slcp_metric_time_series = addMetricEmissions(SLCPTimeSeries)
+
         for method in methods:
             ColumnName = scenario + " - " + method
             # Add CO2 equivalent emissions for CH4
-            gir_emissions_series_output[ColumnName, 'CO2'] = slcp_metric_time_series[['Year', method]].set_index('Year')
+            if 'CH4' in gir_emissions_series.columns.levels[1]:
+                gir_emissions_series_output[ColumnName, 'CO2'] = slcp_metric_time_series[['Year', method]].set_index('Year')
 
             # Add CO2 equivalent emissions for CO2
-            gir_emissions_series_output[ColumnName, 'CO2'] += gir_emissions_series[scenario, 'CO2']
+            if 'CO2' in gir_emissions_series.columns.levels[1]:
+                gir_emissions_series_output[ColumnName, 'CO2'] += gir_emissions_series[scenario, 'CO2']
 
             # # Add CO2 equivalent emissions for N20
-            if method is 'GWP20':
-                CO2eValueN20 = METRIC_CONSTANTS['GWP20'][0]
-            elif method is 'GTP100':
-                CO2eValueN20 = METRIC_CONSTANTS['GTP100'][0]
-            elif method is 'GTP20':
-                CO2eValueN20 = METRIC_CONSTANTS['GTP20'][0]
-            else:
-                CO2eValueN20 = METRIC_CONSTANTS['GWP100'][0]
-            gir_emissions_series_output[ColumnName, 'CO2'] += CO2eValueN20*gir_emissions_series[scenario, 'N2O']
+            if 'N2O' in gir_emissions_series.columns.levels[1]:
+                if method is 'GWP20':
+                    CO2eValueN20 = METRIC_CONSTANTS['GWP20'][0]
+                elif method is 'GTP100':
+                    CO2eValueN20 = METRIC_CONSTANTS['GTP100'][0]
+                elif method is 'GTP20':
+                    CO2eValueN20 = METRIC_CONSTANTS['GTP20'][0]
+                else:
+                    CO2eValueN20 = METRIC_CONSTANTS['GWP100'][0]
+                gir_emissions_series_output[ColumnName, 'CO2'] += CO2eValueN20*gir_emissions_series[scenario, 'N2O']
 
     return gir_emissions_series_output
 
