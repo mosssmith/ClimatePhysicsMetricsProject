@@ -8,20 +8,20 @@ from pathlib import Path
 VECTOR_METRIC = pd.read_csv(Path(__file__).parent / './CO2FEVectorMetric/CO2FEVectorMetricFactors.csv')
 
 METRIC_CONSTANTS = pd.DataFrame({
-    'GWP100': [28],
-    'GWP20': [84],
-    'GTP100': [4],
-    'GTP20': [67],
+    'GWP100': [28, 265],
+    'GWP20': [84, 264],
+    'GTP100': [4, 234],
+    'GTP20': [67, 277],
     'H': [100],
     'CGWP100': [4300],
     'CGTP75': [3700],
     'r': [0.75],
     's': [0.25],
     'dt': [20],
-    'REch4': [0.000599],       #W/m2ppb AR5 Chapt.8 Appendix 8.A. 1.65 * 0.000363
-    'REco2': [0.0000137],      #W/m2ppb AR5 Chapt.8 Appendix 8.A.
-    'Convch4': [0.351828],  #ppb/MtCH4 GIR
-    'Convco2': [0.1282496]   #ppb/MtCO2 [0.46895] #ppb/MtC GIR - where does this come from?
+    'REch4': [0.000599],        #W/m2ppb AR5 Chapt.8 Appendix 8.A. 1.65 * 0.000363
+    'REco2': [0.0000137],       #W/m2ppb AR5 Chapt.8 Appendix 8.A.
+    'Convch4': [0.351828],      #ppb/MtCH4 GIR
+    'Convco2': [0.1282496]      #ppb/MtCO2 [0.46895] #ppb/MtC GIR - where does this come from?
 })
 
 
@@ -65,13 +65,13 @@ def addCO2eMetricEmissions(gir_emissions_series, methods):
             # # Add CO2 equivalent emissions for N20
             if 'N2O' in gir_emissions_series.columns.levels[1]:
                 if method is 'GWP20':
-                    CO2eValueN20 = METRIC_CONSTANTS['GWP20'][0]
+                    CO2eValueN20 = METRIC_CONSTANTS['GWP20'][1]
                 elif method is 'GTP100':
-                    CO2eValueN20 = METRIC_CONSTANTS['GTP100'][0]
+                    CO2eValueN20 = METRIC_CONSTANTS['GTP100'][1]
                 elif method is 'GTP20':
-                    CO2eValueN20 = METRIC_CONSTANTS['GTP20'][0]
+                    CO2eValueN20 = METRIC_CONSTANTS['GTP20'][1]
                 else:
-                    CO2eValueN20 = METRIC_CONSTANTS['GWP100'][0]
+                    CO2eValueN20 = METRIC_CONSTANTS['GWP100'][1]
                 gir_emissions_series_output[ColumnName, 'CO2'] += CO2eValueN20*gir_emissions_series[scenario, 'N2O']
 
     return gir_emissions_series_output
