@@ -26,12 +26,3 @@ DECAY_CONSTANTS = pd.DataFrame(
           'CarbonLifetimes': CARBON_LIFETIMES,
           'MethaneBoxes': METHANE_BOXES,
           'MethaneLifetimes': METHANE_LIFETIMES})
-
-
-# # CO2we Calculator Constants
-# # DT = 20
-# # H = 100
-# # GWPH = 28
-# # R = 0.75
-# # S = 0.25
-
