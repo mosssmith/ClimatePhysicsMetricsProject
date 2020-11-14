@@ -3,6 +3,7 @@ mp.dps = 15; mp.pretty = True
 import pandas as pd
 import numpy as np
 from pathlib import Path
+from tqdm.autonotebook import tqdm
 
 # Add VectorMetric into the functions directly
 VECTOR_METRIC = pd.read_csv(Path(__file__).parent / './CO2FEVectorMetric/CO2FEVectorMetricFactors.csv')
@@ -34,9 +35,9 @@ def addCO2eMetricEmissions(gir_emissions_series, methods):
 
     gir_emissions_series_output = gir_emissions_series.copy()
 
-    for scenario in Scenarios:
+    for scenario in tqdm(Scenarios, desc="Scenarios Completed"):
         scen_names = []
-        gases_in = ['CO2','CH4','N2O']
+        gases_in = ['CO2', 'CH4', 'N2O']
 
         # MAKE DATAFRAME LARGE ENOUGH TO HOLD METRIC EMISSIONS SCENARIOS
         for method in methods:
@@ -77,7 +78,7 @@ def addCO2eMetricEmissions(gir_emissions_series, methods):
                 else:
                     CO2eValueN20 = METRIC_CONSTANTS['GWP100N2O'][0]
                 gir_emissions_series_output[ColumnName, 'CO2'] += CO2eValueN20*gir_emissions_series[scenario, 'N2O']
-
+        pass
     return gir_emissions_series_output
 
 
@@ -190,16 +191,25 @@ def addCO2feEmsColumn(vector_metric, slcp_emissions_series):
     return slcp_emissions_series.drop(['NormalisedYear', 'MultipliedEmissions', 'BValue'], axis=1)
 
 
+# Have a go at calculating B using a matrix
+
+# def generateBValueMatrix(gir_emissions_series, methods):
+#     Scenarios = gir_emissions_series.columns.levels[0]
+#     gir_emissions_series_output = gir_emissions_series.copy()
+#     for scenario in Scenarios:
+#     return gir_emissions_series_output
+
+
 # Add B value column and insert the b value for each year
 
 def addBValueColumn(vector_metric, slcp_emissions_series):
     slcp_emissions_series["BValue"] = np.zeros(len(slcp_emissions_series.index)).tolist()
 
-    for i in slcp_emissions_series.index:
+    for i in tqdm(slcp_emissions_series.index, desc="Scenario Completion (Years)"): #slcp_emissions_series.index:
+        pass
         slcp_emissions_series["BValue"].loc[i] = generateBValue(vector_metric,
                                                                 slcp_emissions_series,
                                                                 slcp_emissions_series["Year"].loc[i])
-
     return slcp_emissions_series
 
 

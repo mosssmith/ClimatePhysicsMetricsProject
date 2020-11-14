@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 
 # Test Emissions Timeseries
-TIME_PERIOD = 300
+TIME_PERIOD = 500
 SLCP_EMISSIONS = np.zeros(TIME_PERIOD).tolist()
 SLCP_EMISSIONS[0] = 1
 YEARS = np.arange(0, TIME_PERIOD).tolist()
